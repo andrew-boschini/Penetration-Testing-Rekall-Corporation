@@ -1,0 +1,67 @@
+# Attack Path – Rekall Penetration Test
+
+## Initial Objectives
+
+- Breach web application and internal systems
+- Gain administrator privileges
+- Capture and exfiltrate sensitive data
+
+---
+
+## 1. Reconnaissance
+
+Tools: whois, nmap, nikto, manual browsing
+
+- Discovered public-facing login portal
+- Exposed metadata via SSL certs, robots.txt, headers
+
+---
+
+## 2. Vulnerability Identification
+
+### Web App Issues:
+
+| Vulnerability        | Description                                 | Severity |
+|----------------------|---------------------------------------------|----------|
+| Reflected XSS        | Input reflected unsanitized to DOM          | High     |
+| SQL Injection        | Login bypass using `ok' OR 1=1--`           | Critical |
+| Local File Inclusion | Uploading `.jpg.php` file led to LFI        | High     |
+| Command Injection    | Unsanitized inputs passed to shell (DNS/MX) | High     |
+| Sensitive Data Leak  | robots.txt, HTML source, HTTP headers       | Medium   |
+
+### Host Exploits:
+
+- RCE via Shellshock on CGI endpoint
+- Tomcat WAR deployment on .10 host
+- Unpatched Nessus vulnerabilities on .12
+
+---
+
+## 3. Gaining Foothold
+
+- Logged into target Linux host via SSH using dumped creds
+- Deployed Metasploit payload for reverse shell access
+- Uploaded tools (enum4linux, winPEAS, BloodHound)
+
+---
+
+## 4. Privilege Escalation
+
+- On Windows, used winPEAS to identify unquoted service path
+- Dumped LSASS via Mimikatz and captured domain admin credentials
+- Used PsExec to gain Domain Admin shell
+
+---
+
+## 5. Post-Exploitation
+
+- Captured 10+ flags from multiple systems
+- Exfiltrated HR files and system credentials
+- Cleaned up payloads and verified persistence removal
+
+---
+
+## Outcome
+
+- Complete domain compromise
+- Detailed remediation steps provided in report
